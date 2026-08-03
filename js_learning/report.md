@@ -109,3 +109,119 @@ console.log(x); // 10
 このように{}で宣言しないとだめ
 
 基礎文法編終了
+
+# 20260803
+関数編開始
+
+### return
+returnを使用するとき
+```javascript
+{
+    function sum(a, b){
+        return a + b;
+    }
+
+    console.log(sum(300, 700));
+}
+```
+returnを使用しないとき
+```javascript
+{
+    function sum(a, b){
+        console.log(a + b);
+    }
+
+    sum(300, 700));
+}
+```
+関数の結果を使ってほかの計算をしたい場合、returnを使用する。
+returnを使用しないときはreturn undefined;を返していることになる。
+
+### 関数のデフォルト値
+仮引数のところであらかじめデフォルト値を設定しておくと、呼び出す時に指定していない場合にデフォルト値を使用する
+```javascript
+'use strict';
+
+{
+  function calculateTotal(price, amount, rate = 1.1) {
+    return price * amount * rate;
+  }
+
+  console.log(calculateTotal(100, 10));
+  console.log(calculateTotal(150, 10));
+  console.log(calculateTotal(200, 10));
+  console.log(calculateTotal(120, 10, 1.08));
+}
+```
+
+### 関数のスコープ
+関数の引数はその関数の中でのみ参照できる。なので異なる関数ではスコープが異なるため、同じ引数名を使い回すことができる。
+
+###  関数式
+```javascript
+{
+  console.log(double(10));
+
+  // 関数宣言
+  function double(num) {
+    return num * 2;
+  }
+
+  // 関数式
+    const double = function(num) {
+        return num * 2;
+    };
+}
+```
+関数宣言ではどの位置で宣言しても一番最初に宣言したことになる。間数式では先に宣言しないといけない。
+
+### アロー関数
+```javascript
+{
+  // 関数宣言
+  // function double(num) {
+  //   return num * 2;
+  // }
+
+  // アロー関数式
+  const double = (num) => {
+    return num * 2;
+  };
+
+  // const double = num => {
+  //   return num * 2;
+  // };
+
+  // const double = num => num * 2;
+
+  console.log(double(10));
+}
+```
+
+### 関数の引数に関数を使う
+```javascript
+{
+  const double = (num) => {
+    return num * 2;
+  };
+  
+  const calc = (num, func) => {
+    return func(num);
+  };
+
+  consolo.log(calc(20, double));//関数名のみでいい
+
+}
+```
+```javascript
+{
+  const calc = (num, func) => {
+    return func(num);
+  };
+
+  console.log(calc(20, (num) => { 
+    return num * 2; 
+  }));
+}
+```
+アロー関数であれば、定義を引数の部分に書くことができる。
