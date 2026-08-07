@@ -225,3 +225,34 @@ returnを使用しないときはreturn undefined;を返していることにな
 }
 ```
 アロー関数であれば、定義を引数の部分に書くことができる。
+
+# 20260807
+## 配列
+```javascript
+Array.push(x);
+//配列[Array]の末尾にxを追加
+Array.pop()
+// 配列の末尾を取り除く
+Array.unshift(x)
+// 配列の先頭にxを追加
+Array.shift()
+// 先頭を取る
+Array.splice(start, n, item1, item2, ...)
+// start => 変化する位置のインデックス
+// n => 削除する要素の数
+// item1, item2, ... => 追加する要素（省略可）
+
+
+Array.join()
+Array.split()
+{
+  const names = ['Taro', 'Jiro', 'Saburo'];
+
+  // Taro|Jiro|Saburo　と表示したい
+  console.log(names.join('|'));
+
+  const names = 'Taro|Jiro|Saburo';
+  console.log(names.split('|'));
+  // ['Taro', 'Jiro', 'Saburo']
+}
+```
