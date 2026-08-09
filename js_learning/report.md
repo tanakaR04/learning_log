@@ -256,3 +256,69 @@ Array.split()
   // ['Taro', 'Jiro', 'Saburo']
 }
 ```
+
+### map
+```javascript
+{
+  const prices = [100, 150, 200];
+
+  // const pricesWithTax = [];
+  // prices.forEach((price) => {
+  //   pricesWithTax.push(price * 1.1);
+  // });
+
+  const pricesWithTax = prices.map((price) => {
+    return price * 1.1;
+  });
+
+  console.log(pricesWithTax);
+}
+
+{
+  const prices = [100, 150, 200];
+
+  // const pricesOver150 = [];
+  // prices.forEach((price) => {
+  //   if (price >= 150) {
+  //     pricesOver150.push(price);
+  //   }
+  // });
+
+  const pricesOver150 = prices.filter((price) => {
+    return price >= 150;
+  });
+
+  console.log(pricesOver150);
+}
+```
+
+### レスト構文とスプレッド構文
+```javascript
+'use strict';
+
+{
+  const scores = [70, 90, 80, 85];
+  const [first, ...others] = scores;
+
+  console.log(first);
+  console.log(others);
+}
+/// 70
+/// [90, 80, 85]
+
+'use strict';
+
+{
+  const moreScores = [77, 88];
+  const scores = [70, 90, 80, 85, ...moreScores];
+  const [first, ...others] = scores;
+
+  console.log(first);
+  console.log(others);
+}
+// 70
+// [90, 80, 85, 77, 88]
+```
+オブジェクトでも同じように用いれる
+# 20260809
+##
