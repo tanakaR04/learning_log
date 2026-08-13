@@ -15,19 +15,34 @@
     'use strict';
 
     {
+      const Menu = (props) =>{
+        return (
+          <li>
+            <button>-</button>
+            <button>+</button>
+            {props.name} ({props.price}円 × 0個)
+          </li>
+        );
+      };
+
+      const App = () =>{
+        return (
+          <>
+          <h1>メニュー</h1>
+          <ul className = "menus">
+            <Menu name = "牛丼" price = "400" />
+            <Menu name = "カレー" price = "500" />
+            <Menu name = "サラダ" price = "300" />
+          </ul>
+            <p>合計</p>
+          </>
+        );
+      };
+
+
       const container = document.querySelector('#container');
       const root = ReactDOM.createRoot(container);
-      root.render(
-        <>
-        <h1>メニュー</h1>
-        <ul>
-          <li>牛丼</li>
-          <li>牛丼</li>
-          <li>牛丼</li>
-        </ul>
-          <p>合計</p>
-        </>
-      );
+      root.render(<App />);
 
       
     }
