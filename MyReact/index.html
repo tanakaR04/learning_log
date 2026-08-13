@@ -7,11 +7,30 @@
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>My React App</h1>
-  
+  <div id= "container"></div>
   <script type="text/babel">
+    'use strict';
+
+    {
+      const container = document.querySelector('#container');
+      const root = ReactDOM.createRoot(container);
+      root.render(
+        <>
+        <h1>メニュー</h1>
+        <ul>
+          <li>牛丼</li>
+          <li>牛丼</li>
+          <li>牛丼</li>
+        </ul>
+          <p>合計</p>
+        </>
+      );
+
+      
+    }
   </script>
 </body>
 </html>
