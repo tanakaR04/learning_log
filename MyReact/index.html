@@ -16,25 +16,68 @@
 
     {
       const Menu = (props) =>{
+        const decrement = () => {
+          props.onDecrement(props.menuId);
+        };
+        const increment = () => {
+          props.onIncrement(props.menuId);
+        };
+
         return (
           <li>
-            <button>-</button>
-            <button>+</button>
-            {props.name} ({props.price}円 × 0個)
+            <button onClick={decrement}>-</button>
+            <button onClick={increment}>+</button>
+            {props.name} ({props.price}円 × {props.count}個)
           </li>
         );
       };
 
       const App = () =>{
+        const [counts, setCounts] = React.useState([0, 0, 0]);
+        const menus = [
+          {id:0, name: '牛丼', price: 400},
+          {id:1, name: 'カレー', price: 500},
+          {id:2, name: 'サラダ', price: 300},
+        ];
+        const total = 
+        (menus[0].price * counts[0]) +
+        (menus[1].price * counts[1]) +
+        (menus[2].price * counts[2]);
+
+        const decrementMenu = (menuId) => {
+          if (counts[menuId] > 0){
+            const newCounts = [...counts];
+            newCounts[menuId]--;
+            setCounts(newCounts);
+          }
+        }
+        const incrementMenu= (menuId) => {
+          const newCounts = [...counts];
+            newCounts[menuId]++;
+            setCounts(newCounts);
+        }
+
+        const menuItems = menus.map((menu) => {
+          return (
+            <Menu
+              key = {menu.id}
+              menuId = {menu.id}
+              count = {counts[menu.id]} 
+              name = {menu.name}
+              price = {menu.price}
+              onDecrement={decrementMenu}
+              onIncrement={incrementMenu}
+            />
+          );
+        });
+
         return (
           <>
           <h1>メニュー</h1>
           <ul className = "menus">
-            <Menu name = "牛丼" price = "400" />
-            <Menu name = "カレー" price = "500" />
-            <Menu name = "サラダ" price = "300" />
+            {menuItems}
           </ul>
-            <p>合計</p>
+          <p>合計: {total}円</p>
           </>
         );
       };
