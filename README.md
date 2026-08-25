@@ -16,3 +16,5 @@ JS 日時操作編
 -JS ToDoアプリ
 -React ToDoアプリ
 やったこと
+-JS データ型編
+-JS ToDoアプリ
