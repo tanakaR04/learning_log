@@ -28,3 +28,4 @@ JS 日時操作編
 やったこと
 -React ToDoアプリの残り
 -TypeScript入門
+-Tailwind CSS入門
