@@ -18,3 +18,13 @@ JS 日時操作編
 やったこと
 -JS データ型編
 -JS ToDoアプリ
+
+### 202608257
+やること
+-React ToDoアプリの残り
+-TypeScript入門
+-Tailwind CSS入門
+-Next.js入門
+やったこと
+-React ToDoアプリの残り
+-TypeScript入門
