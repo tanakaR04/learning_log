@@ -1,3 +1,9 @@
+/*
+  Tailwind の3層を読み込むおまじない。
+  - base: リセットや基本スタイル
+  - components: コンポーネント用（今回はほぼ未使用）
+  - utilities: text-lg / p-4 などのユーティリティクラス
+*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

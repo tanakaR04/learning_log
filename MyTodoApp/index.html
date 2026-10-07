@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="js">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,34 +7,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!--
+      【このアプリで学ぶこと】
+      - HTML = ページの「設計図」
+      - DOM = ブラウザが設計図から作った「実物の木構造」
+      - main.js が DOM を直接いじって画面を更新する
+
+      ReactTodoApp との違い:
+      ここでは createElement / appendChild / remove を自分で書く。
+      React では状態(todos)を変えるだけで、画面更新は React に任せる。
+    -->
     <div class="container">
         <h1>
             Todos
+            <!-- id があると JS から document.querySelector('#purge') で探せる -->
             <button id="purge">Purge</button>
         </h1>
+
+        <!--
+          最初は空の ul。
+          ToDo の <li> は HTML に書かず、main.js が DOM に後から追加する。
+        -->
         <ul id="todos">
-            <!-- <li>
-                <label >
+            <!-- 下は「こういう HTML 構造になる」という見本（コメントアウト中）
+            <li>
+                <label>
                     <input type="checkbox">
-                    <span>
-                        aaa 111 qqqq qqq qqq  q q q q  qq q qq q  q q q q  qqq  q q q q  qqq  q q q q  qq
-                    </span>
+                    <span>タイトル</span>
                 </label>
                 <button>x</button>
             </li>
-            <li>
-                <label >
-                    <input type="checkbox">
-                    aaa
-                </label>
-                <button>x</button>
-            </li> -->
+            -->
         </ul>
+
+        <!--
+          form の submit を JS で受け取る。
+          ページ全体のリロードを防ぐために e.preventDefault() が必要（main.js）。
+        -->
         <form id="add-form">
             <input type="text">
             <button>Add</button>
         </form>
     </div>
+
+    <!-- HTML のあとで読み込む → 上の要素がすでに DOM にある状態で JS が動く -->
     <script src="main.js"></script>
 </body>
 </html>

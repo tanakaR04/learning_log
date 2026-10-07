@@ -4,102 +4,159 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Todos</title>
+  <!--
+    React / ReactDOM: UI ライブラリ
+    Babel standalone: ブラウザ上で JSX を JS に変換する（学習用。本番ではビルドする）
+  -->
   <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container" id="root">
-  </div>
+  <!--
+    【このアプリで学ぶこと】
+    - コンポーネント分割（Todo / AddForm / App）
+    - props（親 → 子へデータと関数を渡す）
+    - useState（状態。変わると再描画）
+    - useEffect（初回だけ localStorage から読む）
+    - useRef（入力欄へフォーカス）
+    - 状態の持ち上げ（todos は親 App が持つ）
 
+    MyTodoApp との違い:
+    createElement を自分で書かない。
+    setTodos でデータを変える → React が DOM を更新する。
+  -->
+  <div class="container" id="root"></div>
+
+  <!-- type="text/babel" → Babel が JSX を変換してから実行 -->
   <script type="text/babel">
     'use strict';
 
     {
+      // ========================================
+      // Todo（1行分）— 表示専用に近い子コンポーネント
+      // ========================================
+      // todos の配列自体は持たない。
+      // 親からもらった props を表示し、操作は親へ通知する。
       const Todo = (props) => {
+        // 削除クリック → 親の関数に「どの id か」だけ伝える
         const handleDeleteClick = () => {
           props.onDeleteClick(props.todo.id);
         };
 
+        // チェック変更 → 同じく親へ id を渡す
         const handleTodoCheckboxChange = () => {
           props.onCheckboxChange(props.todo.id);
         };
 
-        return(
+        return (
           <li>
             <label>
-              <input type="checkbox" 
-              checked = {props.todo.isCompleted}
-              onChange = {handleTodoCheckboxChange}
+              {/*
+                checked / onChange は「制御コンポーネント」の形。
+                見た目のチェック状態は props.todo.isCompleted が正。
+              */}
+              <input
+                type="checkbox"
+                checked={props.todo.isCompleted}
+                onChange={handleTodoCheckboxChange}
               />
               <span>
+                {/* {} の中は JavaScript の式 */}
                 {props.todo.title}
               </span>
             </label>
-            <button onClick = {handleDeleteClick}>Del</button>
+            {/*
+              React では onclick ではなく onClick（キャメルケース）。
+              class ではなく className。
+            */}
+            <button onClick={handleDeleteClick}>Del</button>
           </li>
         );
       };
 
+      // ========================================
+      // AddForm — 入力欄だけの子コンポーネント
+      // ========================================
+      // 入力中の文字(title)はフォーム内のローカル状態で十分。
+      // 「追加確定」だけ親に伝える。
       const AddForm = (props) => {
+        // useState: 状態を作る。[今の値, 更新関数]
         const [title, setTitle] = React.useState('');
+
+        // useRef: DOM 要素への参照を保持（再描画しても同じ箱）
         const inputRef = React.useRef(null);
 
         const handleTextChange = (e) => {
+          // 入力のたびに state を更新 → input の value も追従（制御コンポーネント）
           setTitle(e.currentTarget.value);
         };
 
         const handleSubmit = (e) => {
-          e.preventDefault();
-          props.onSubmit(title);
-          setTitle('');
-          inputRef.current.focus();
+          e.preventDefault(); // ページリロード防止
+          props.onSubmit(title); // 親へタイトルを渡す
+          setTitle(''); // 入力欄を空に
+          inputRef.current.focus(); // 追加後もすぐ打てるようにフォーカス
         };
 
-        return(
+        return (
           <form onSubmit={handleSubmit}>
-            <input 
-            type="text"
-            value={title}
-            onChange={handleTextChange}
-            ref={inputRef}
+            <input
+              type="text"
+              value={title}
+              onChange={handleTextChange}
+              ref={inputRef}
             />
             <button>Add</button>
           </form>
         );
       };
 
+      // ========================================
+      // App — 親。todos の「正」をここに置く（状態の持ち上げ）
+      // ========================================
       const App = () => {
         const [todos, setTodos] = React.useState([]);
 
+        // ----------------------------------------
+        // useEffect: 「描画のあと」に副作用を実行
+        // 第2引数 [] = マウント時（最初の1回）だけ
+        // ----------------------------------------
         React.useEffect(() => {
           let savedTodos;
-          if(localStorage.getItem('todos' === null)){
+          // getItem('todos') の結果が null かどうかで分岐する
+          // （昔の誤記: getItem('todos' === null) だと常に getItem(false) になってしまう）
+          if (localStorage.getItem('todos') === null) {
             savedTodos = [];
-          }else{
+          } else {
             savedTodos = JSON.parse(localStorage.getItem('todos'));
           }
           setTodos(savedTodos);
-        }, []) ;
+        }, []);
 
+        // 画面の状態 + localStorage をまとめて更新する共通関数
         const updateTodos = (newTodos) => {
-          setTodos(newTodos);
+          setTodos(newTodos); // ← これで React が再描画する
           localStorage.setItem('todos', JSON.stringify(newTodos));
         };
 
+        // --- Purge: 完了済みを除いた新しい配列を作る ---
         const handlePurgeClick = () => {
-          if(!confirm('Sure?')){
+          if (!confirm('Sure?')) {
             return;
           }
-          const newTodos = todos.filter((todo) =>{
+          const newTodos = todos.filter((todo) => {
             return todo.isCompleted === false;
           });
+          // MyTodoApp と違い、li を手で消す必要はない。
+          // updateTodos → setTodos → 再描画で画面が追いつく。
           updateTodos(newTodos);
         };
 
+        // --- 追加: 配列をコピーしてから push（元配列を直接書き換えない）---
         const handleAddFormSubmit = (title) => {
-          const newTodos = [...todos];
+          const newTodos = [...todos]; // スプレッドで浅いコピー
           newTodos.push({
             id: Date.now(),
             title: title,
@@ -108,9 +165,10 @@
           updateTodos(newTodos);
         };
 
-        const handleTodoCheckboxChange = (id) =>{
+        // --- チェック切替: map で「該当 id だけ反転した新配列」を作る ---
+        const handleTodoCheckboxChange = (id) => {
           const newTodos = todos.map((todo) => {
-            return{
+            return {
               id: todo.id,
               title: todo.title,
               isCompleted: todo.id === id ? !todo.isCompleted : todo.isCompleted,
@@ -119,8 +177,9 @@
           updateTodos(newTodos);
         };
 
+        // --- 削除: filter で該当 id 以外を残す ---
         const handleTodoDeleteClick = (id) => {
-          if(!confirm('Sure?')){
+          if (!confirm('Sure?')) {
             return;
           }
           const newTodos = todos.filter((todo) => {
@@ -129,37 +188,39 @@
           updateTodos(newTodos);
         };
 
+        // todos 配列 → Todo コンポーネントの配列へ
+        // key は React がリストの差分を効率よく見つけるための印（必須）
         const todoItems = todos.map((todo) => {
-          return(
+          return (
             <Todo
-              key = {todo.id} 
-              todo = {todo}
-              onDeleteClick = {handleTodoDeleteClick}
-              onCheckboxChange = {handleTodoCheckboxChange}
+              key={todo.id}
+              todo={todo}
+              onDeleteClick={handleTodoDeleteClick}
+              onCheckboxChange={handleTodoCheckboxChange}
             />
           );
         });
 
-        return(
+        return (
           <>
+            {/* <>...</> は Fragment。余分な div を増やさず複数要素を返せる */}
             <h1>
               Todos
               <button onClick={handlePurgeClick}>Purge</button>
             </h1>
             <ul id="todos">
               {todoItems}
-              </ul>
-              <AddForm
-                onSubmit = {handleAddFormSubmit}
-              />
-              </>
+            </ul>
+            <AddForm onSubmit={handleAddFormSubmit} />
+          </>
         );
       };
 
+      // ========================================
+      // 起動: #root に App をマウント
+      // ========================================
       const root = ReactDOM.createRoot(document.querySelector('#root'));
-      root.render(
-        <App />
-      );
+      root.render(<App />);
     }
   </script>
 </body>
